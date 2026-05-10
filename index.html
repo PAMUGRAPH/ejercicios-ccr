@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Biblioteca Clínica – Ejercicio Terapéutico MSQ | CCR/CESFAM</title>
+<style>
+  :root {
+    --bg: #f7f6f2;
+    --surface: #ffffff;
+    --border: #e2e0d8;
+    --border-strong: #c8c5bb;
+    --text: #1a1917;
+    --text-2: #4a4845;
+    --text-3: #7a7874;
+    --accent: #1d6fa5;
+    --accent-light: #e6f1fb;
+    --accent-border: #b5d4f4;
+    --green: #3b6d11;
+    --green-light: #eaf3de;
+    --green-border: #c0dd97;
+    --amber: #854f0b;
+    --amber-light: #faeeda;
+    --amber-border: #fac775;
+    --red: #a32d2d;
+    --red-light: #fcebeb;
+    --red-border: #f7c1c1;
+    --teal: #0f6e56;
+    --teal-light: #e1f5ee;
+    --teal-border: #9fe1cb;
+    --purple: #534ab7;
+    --purple-light: #eeedfe;
+    --purple-border: #afa9ec;
+    --coral: #993c1d;
+    --coral-light: #faece7;
+    --coral-border: #f0997b;
+    --radius: 10px;
+    --radius-sm: 6px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--text);
+    color: #fff;
+    padding: 28px 32px 22px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 3px solid var(--accent);
+  }
+  .header-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+  .header h1 { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; font-family: 'Georgia', serif; }
+  .header p { font-size: 11px; color: #aaa; margin-top: 3px; font-family: Arial, sans-serif; }
+  .evidence-badge {
+    background: var(--accent);
+    color: #fff;
+    font-size: 10px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+    font-family: Arial, sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+
+  /* REGION TABS */
+  .tabs-wrapper {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    overflow-x: auto;
+    display: flex;
+    gap: 2px;
+    position: sticky;
+    top: 80px;
+    z-index: 99;
+  }
+  .tab-btn {
+    font-family: Arial, sans-serif;
+    font-size: 11.5px;
+    font-weight: 600;
+    padding: 11px 14px;
+    border: none;
+    background: transparent;
+    color: var(--text-3);
+    cursor: pointer;
+    border-bottom: 2.5px solid transparent;
+    white-space: nowrap;
+    letter-spacing: 0.2px;
+    transition: color 0.15s;
+  }
+  .tab-btn:hover { color: var(--accent); }
+  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .tab-btn.top10 { color: var(--amber); }
+  .tab-btn.top10.active { color: var(--amber); border-bottom-color: var(--amber); }
+
+  /* MAIN LAYOUT */
+  .main { padding: 24px; max-width: 1200px; margin: 0 auto; }
+
+  /* SECTION HEADER */
+  .region-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .region-dot {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .region-title { font-size: 16px; font-weight: 700; }
+  .region-subtitle { font-size: 11px; color: var(--text-3); font-family: Arial, sans-serif; margin-left: auto; }
+  .region-count {
+    font-size: 11px;
+    font-family: Arial, sans-serif;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    padding: 3px 10px;
+    border-radius: 20px;
+    color: var(--text-2);
+    font-weight: 600;
+  }
+
+  /* EXERCISE TABLE */
+  .ex-table-wrapper { overflow-x: auto; margin-bottom: 32px; border-radius: var(--radius); border: 1px solid var(--border); background: var(--surface); }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; font-family: Arial, sans-serif; }
+  thead th {
+    background: #f2f0ec;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    color: var(--text-2);
+    padding: 9px 12px;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+    white-space: nowrap;
+  }
+  tbody tr { border-bottom: 1px solid var(--border); }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: #faf9f7; }
+  td {
+    padding: 10px 12px;
+    vertical-align: top;
+    color: var(--text);
+  }
+  td:first-child { font-weight: 600; color: var(--text); min-width: 160px; }
+  .td-objetivo { max-width: 180px; }
+  .td-obs { max-width: 200px; color: var(--text-2); font-size: 11px; line-height: 1.5; }
+
+  /* BADGES */
+  .badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 20px;
+    letter-spacing: 0.2px;
+    white-space: nowrap;
+  }
+  .badge-tipo-movilidad { background: var(--teal-light); color: var(--teal); border: 1px solid var(--teal-border); }
+  .badge-tipo-fortalecimiento { background: var(--accent-light); color: var(--accent); border: 1px solid var(--accent-border); }
+  .badge-tipo-estabilidad { background: var(--purple-light); color: var(--purple); border: 1px solid var(--purple-border); }
+  .badge-tipo-motor { background: var(--amber-light); color: var(--amber); border: 1px solid var(--amber-border); }
+  .badge-tipo-funcional { background: var(--green-light); color: var(--green); border: 1px solid var(--green-border); }
+  .badge-dif-leve { background: var(--green-light); color: var(--green); border: 1px solid var(--green-border); }
+  .badge-dif-moderada { background: var(--amber-light); color: var(--amber); border: 1px solid var(--amber-border); }
+  .badge-impl { background: var(--bg); color: var(--text-2); border: 1px solid var(--border-strong); }
+
+  /* DOSIF */
+  .dosif { font-size: 11px; color: var(--text-2); }
+  .dosif strong { color: var(--text); }
+
+  /* PROG/REG */
+  .prog-reg { font-size: 11px; color: var(--text-2); }
+  .prog-reg .arrow { color: var(--green); font-weight: 700; }
+  .prog-reg .arrow-down { color: var(--red); font-weight: 700; }
+
+  /* TOP 10 SECTION */
+  .top10-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 14px;
+    margin-bottom: 32px;
+  }
+  .top10-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    box-shadow: var(--shadow);
+  }
+  .top10-rank {
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--border-strong);
+    font-family: Georgia, serif;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .top10-name {
+    font-size: 13.5px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: var(--text);
+  }
+  .top10-region {
+    font-size: 10px;
+    font-family: Arial;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    color: var(--text-3);
+    margin-bottom: 8px;
+  }
+  .top10-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 8px; }
+  .top10-why {
+    font-size: 11.5px;
+    color: var(--text-2);
+    line-height: 1.5;
+    font-family: Arial, sans-serif;
+    border-top: 1px solid var(--border);
+    padding-top: 8px;
+    margin-top: 4px;
+  }
+
+  /* LEGEND */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+    padding: 12px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+  }
+  .legend-item { display: flex; align-items: center; gap: 5px; font-size: 10.5px; color: var(--text-2); font-family: Arial, sans-serif; }
+
+  /* EVIDENCE NOTE */
+  .evidence-note {
+    background: var(--accent-light);
+    border: 1px solid var(--accent-border);
+    border-radius: var(--radius-sm);
+    padding: 12px 16px;
+    margin-bottom: 24px;
+    font-size: 11.5px;
+    color: var(--accent);
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+  }
+  .evidence-note strong { color: var(--text); }
+
+  /* HIDDEN SECTION */
+  .region-section { display: none; }
+  .region-section.active { display: block; }
+
+  /* REGION COLOR DOTS */
+  .dot-hombro { background: var(--accent); }
+  .dot-rodilla { background: var(--teal); }
+  .dot-lumbar { background: var(--amber); }
+  .dot-cervical { background: var(--purple); }
+  .dot-tobillo { background: var(--coral); }
+  .dot-cadera { background: var(--green); }
+  .dot-top10 { background: linear-gradient(135deg, var(--amber), var(--accent)); }
+
+  @media print {
+    .header { position: static; }
+    .tabs-wrapper { display: none; }
+    .region-section { display: block !important; }
+    .tab-btn { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <div>
+      <h1>Biblioteca Clínica · Ejercicio Terapéutico Musculoesquelético</h1>
+      <p>CCR / CESFAM · Adulto Mayor · Atención Ambulatoria Simultánea · Basado en Evidencia 2021–2025</p>
+    </div>
+    <span class="evidence-badge">Evidencia PubMed/JOSPT</span>
+  </div>
+</div>
+
+<div class="tabs-wrapper" role="tablist">
+  <button class="tab-btn active" onclick="showRegion('hombro')" role="tab">🫀 Hombro</button>
+  <button class="tab-btn" onclick="showRegion('rodilla')" role="tab">🦵 Rodilla</button>
+  <button class="tab-btn" onclick="showRegion('lumbar')" role="tab">🦴 Lumbar</button>
+  <button class="tab-btn" onclick="showRegion('cervical')" role="tab">🧠 Cervical</button>
+  <button class="tab-btn" onclick="showRegion('tobillo')" role="tab">🦶 Tobillo/Pie</button>
+  <button class="tab-btn" onclick="showRegion('cadera')" role="tab">⚙️ Cadera</button>
+  <button class="tab-btn top10" onclick="showRegion('top10')" role="tab">⭐ Top 10</button>
+</div>
+
+<div class="main">
+
+<!-- ======================== HOMBRO ======================== -->
+<div id="sec-hombro" class="region-section active">
+  <div class="region-header">
+    <div class="region-dot dot-hombro"></div>
+    <div class="region-title">Hombro</div>
+    <div class="region-count">6 ejercicios</div>
+    <div class="region-subtitle">Síndrome manguito rotador · Tendinopatía · Capsulitis</div>
+  </div>
+  <div class="evidence-note">
+    <strong>Evidencia:</strong> JOSPT 2024 (SR+MA, n=1281 RCTs) recomienda ejercicio específico —estabilización escapular, control motor y fortalecimiento excéntrico— con <em>alta certeza de evidencia</em> sobre ejercicio inespecífico. Frontiers Bioeng 2025: estabilización escapular (SMD −0.36) y movilización/elongación (SMD −0.41) mejoran dolor a corto plazo. Intensidad baja-moderada dentro del umbral de dolor es el enfoque estándar en APS.
+  </div>
+  <div class="ex-table-wrapper">
+  <table>
+    <thead>
+      <tr>
+        <th>Nombre técnico</th>
+        <th>Objetivo principal</th>
+        <th>Implemento</th>
+        <th>Dificultad</th>
+        <th>Tipo</th>
+        <th>Dosificación CCR</th>
+        <th>Progresión</th>
+        <th>Regresión</th>
+        <th>Observaciones clínicas</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Fortalecimiento de rotadores externos en decúbito lateral (RE isométrico → isotónico)</td>
+        <td class="td-objetivo">Fortalecer infraespinoso y redondo menor; restaurar balance rotacional glenohumeral</td>
+        <td><span class="badge badge-impl">Theraband / mancuerna liviana</span></td>
+        <td><span class="badge badge-dif-leve">Leve</span></td>
+        <td><span class="badge badge-tipo-fortalecimiento">Fortalecimiento</span></td>
+        <td class="dosif"><strong>3 × 12–15 rep</strong><br>Theraband amarillo/rojo<br>2–3 días/semana</td>
+        <td class="prog-reg"><span class="arrow">↑</span> Theraband naranja/verde · RI en 90° ABD</td>
+        <td class="prog-reg"><span class="arrow-down">↓</span> Isométrico puro · sin ROM</td>
+        <td class="td-obs">Codo en 90°, almohada entre cuerpo y brazo. Evitar compensación del trapecio. Ejercicio de mayor adherencia en adulto mayor.</td>
+      </tr>
+      <tr>
+        <td>Retracción y depresión escapular (squeeze escapular)</td>
+        <td class="td-objetivo">Activar trapecio medio/inferior y romboides; restaurar ritmo escápulo-humeral</td>
+        <td><span class="badge badge-impl">Sin implemento / Theraband</span></td>
+        <td><span class="badge badge-dif-leve">Leve</span></td>
+        <td><span class="badge badge-tipo-motor">Control motor</span></td>
+        <td class="dosif"><strong>3 × 15 rep</strong><br>Mantención 3–5 seg<br>Puede hacerse sentado</td>
+        <td class="prog-reg"><span class="arrow">↑</span> Remo bajo con Theraband · mancuerna</td>
+        <td class="prog-reg"><span class="arrow-down">↓</span> Isométrico con mano en pared</td>
+        <td class="td-obs">Ideal para supervisión simultánea: fácil de verificar visualmente. Enseñar primero en espejo. Base para todos los ejercicios de hombro.</td>
+      </tr>
+      <tr>
+        <td>Abducción en plano escapular (scaption) con Theraband</td>
+        <td class="td-objetivo">Fortalecer supraespinoso y deltoides medio; mejorar elevación funcional</td>
+        <td><span class="badge badge-impl">Theraband</span></td>
+        <td><span class="badge badge-dif-leve">Leve–Moderada</span></td>
+        <td><span class="badge badge-tipo-fortalecimiento">Fortalecimiento</span></td>
+        <td class="dosif"><strong>3 × 12 rep</strong><br>30–45° anterior al plano frontal<br>Rango sin dolor</td>
+        <td class="prog-reg"><span class="arrow">↑</span> Mancuerna liviana · rango aumentado</td>
+        <td class="prog-reg"><span class="arrow-down">↓</span> Pendular de Codman sin carga</td>
+        <td class="td-obs">Preferir plano escapular (30° ant) sobre abducción pura: menor compresión subacromial. Si hay dolor en arco, limitar a 60–70°.</td>
+      </tr>
+      <tr>
+        <td>Flexión glenohumeral asistida con polea o bastón (AAROM)</td>
+        <td class="td-objetivo">Recuperar arco de movilidad activo-asistido en flexión; reducir rigidez capsular</td>
+        <td><span class="badge badge-impl">Polea / bastón</span></td>
+        <td><span class="badge badge-dif-leve">Leve</span></td>
+        <td><span class="badge badge-tipo-movilidad">Movilidad</span></td>
+        <td class="dosif"><strong>3 × 10–15 rep</strong><br>Ritmo lento controlado<br>Al límite sin dolor</td>
+        <td class="prog-reg"><span class="arrow">↑</span> AROM libre · con mancuerna 0.5 kg</td>
+        <td class="prog-reg"><span class="arrow-down">↓</span> Péndulo de Codman (gravedad asistida)</td>
+        <td class="td-obs">Útil en capsulitis adhesiva y post-inmovilización. Supervisión simple: el paciente trabaja solo, kinesiólogo supervisa de lejos.</td>
+      </tr>
+      <tr>
+        <td>Elongación pectoral menor en rincón (corner stretch)</td>
+        <td class="td-objetivo">Reducir tensión en pectoral menor; mejorar postura escapular y apertura torácica</td>
+        <td><span class="badge badge-impl">Espaldera / esquina de pared</span></td>
+        <td><span class="badge badge-dif-leve">Leve</span></td>
+        <td><span class="badge badge-tipo-movilidad">Movilidad</span></td>
+        <td class="dosif"><strong>3 × 30 seg</strong><br>Mantención estática<br>Codos a 90°</td>
+        <td class="prog-reg"><span class="arrow">↑</span> Codos más altos (110°) · tiempo</td>
+        <td class="prog-reg"><span class="arrow-down">↓</span> Autoestiramiento en silla con manos detrás</td>
+        <td class="td-obs">Imprescindible en hombro anteriorizado. Fácil de enseñar y hacer en casa. Buena tolerancia en adulto mayor.</td>
+      </tr>
+      <tr>
+        <td>Fortalecimiento excéntrico del manguito rotador con Theraband (fase excéntrica controlada)</td>
+        <td class="td-objetivo">Estimular remodelación tendinosa; reducir dolor en tendinopatía crónica de MR</td>
+        <td><span class="badge badge-impl">Theraband</span></td>
+        <td><span class="badge badge-dif-moderada">Moderada</span></td>
+        <td><span class="badge badge-tipo-fortalecimiento">Fortalecimiento</span></td>
+        <td class="dosif"><strong>3 × 15 rep excéntricas</strong><br>Fase excéntrica 3–4 seg<br>2 días/semana</td>
+        <td class="prog-reg"><span class="arrow">↑</span> Mayor resistencia banda · mancuerna 0.5–1 kg</td>
+        <td class="prog-reg"><span class="arrow-down">↓</span> Fase concéntrica únicamente</td>
+        <td class="td-obs">Evidencia sólida en tendinopatía crónica (JOSPT 2024). Puede causar molestia leve durante: informar al paciente. Evitar en fase aguda inflamatoria.</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<!-- ======================== RODILLA ======================== -->
+<div id="sec-rodilla" class="region-section">
+  <div class="region-header">
+    <div class="region-dot dot-rodilla"></div>
+    <div class="region-title">Rodilla</div>
+    <div class="region-count">6 ejercicios</div>
+    <div class="region-subtitle">Gonartrosis · Síndrome femoropatelar · Post-lesión ligamentaria</div>
+  </div>
+  <div class="evidence-note">
+    <strong>Evidencia:</strong> Meta-análisis 2024 (n=1712, J Pers Med) y meta-análisis dosis-respuesta 2025 (Frontiers Public Health): entrenamiento de resistencia mejora dolor (SMD −0.48), fuerza (SMD 0.40) y función (SMD −0.56) en OA. Dosis óptima ~680 METs-min/semana. Intervenciones ≥9 semanas más efectivas. El ejercicio de fortalecimiento de cuádriceps es la intervención con mayor nivel de evidencia en gonartrosis APS.
+  </div>
+  <div class="ex-table-wrapper">
+  <table>
+    <thead>
+      <tr>
+        <th>Nombre técnico</th>
+        <th>Objetivo principal</th>
+        <th>Implemento</th>
+        <th>Dificultad</th>
+        <th>Tipo</th>
+        <th>Dosificación CCR</th>
+        <th>Progresión</th>
+        <th>Regresión</th>
+        <th>Observaciones clínicas</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Extensión de rodilla en sedente (quad set + arco completo)</td>
+        <td class="td-objetivo">Fortalecer cuádriceps en cadena abierta; reducir hipotrofia en gonartrosis</td>
+        <td><span class="badge badge-impl">Sin implemento / Theraband tobillo</span></td>
+        <td><span class="badge badge-dif-leve">Leve</span></td>
+        <td><span class="badge badge-tipo-fortalecimiento">Fortalecimiento</span></td>
+        <td class="dosif"><strong>3 × 15 rep</strong><br>Mantención 3 seg en extensión<br>Fase excéntrica controlada</td>
+        <td class="prog-reg"><span class="arrow">↑</span> Theraband en tobillo · mancuerna 0.5–1 kg</td>
+        <td class="prog-reg"><span class="arrow-down">↓</span> Quad set isométrico puro (sin ROM)</td>
+        <td class="td-obs">Primera opción en dolor femoropatelar severo. Fácil de supervisar en sedente. Alta adherencia en AM. Base de toda progresión en gonartrosis.</td>
+      </tr>
+      <tr>
+        <td>Sentadilla parcial bipodal en silla (sit-to-stand modificado)</td>
+        <td class="td-objetivo">Fortalecer cuádriceps, glúteo mayor y core en cadena cerrada; mejorar función AVD</td>
+        <td><span class="badge badge-impl">Silla / barras paralelas</span></td>
+        <td><span class="badge badge-dif-leve">Leve–Moderada</span></td>
+        <td><span class="badge badge-tipo-funcional">Funcional</span></td>
+        <td class="dosif"><strong>3 × 10–12 rep</strong><br>Rango 0–60° flexión<br>Apoyo en paralelas si necesario</td>
+        <td class="prog-reg"><span class="arrow">↑</span> Monopodal · sin apoyo · mayor ROM</td>
+        <td class="prog-reg"><span class="arrow-down">↓</span> Solo transferencia sedente-bípedo con apoyo total</td>
+        <td class="td-obs">El ejercicio más funcional para AM: replica levantarse de silla. Supervisar alineación rodilla-pie (no valgo). Excelente para atención simultánea.</td>
+      </tr>
+      <tr>
+        <td>Elevación de pierna recta en decúbito supino (SLR)</td>
+        <td class="td-objetivo">Activar cuádriceps y flexores de cadera sin carga articular; útil en dolor articular severo</td>
+        <td><span class="badge badge-impl">Colchoneta / Theraband</span></td>
+        <td><span class="badge badge-dif-leve">Leve</span></td>
+        <td><span class="badge badge-tipo-fortalecimiento">Fortalecimiento</span></td>
+        <td class="dosif"><strong>3 × 15 rep</strong><br>Elevación a 45°, mantención 2 seg<br>Bilateral alternado</td>
+        <td class="prog-reg"><span class="arrow">↑</span> Theraband en tobillo · lastres 0.5–1 kg</td>
+        <td class="prog-reg"><span class="arrow-down">↓</span> Quad set sin elevación</td>
+        <td class="td-obs">Útil en reagudizaciones o muy baja tolerancia al carga. Supervisión fácil en colchoneta. Verificar que no haya extensión lumbar compensatoria.</td>
+      </tr>
+      <tr>
+        <td>Step-up anterior en escalón bajo (10–15 cm)</td>
+        <td class="td-objetivo">Fortalecer cuádriceps y glúteo en cadena cerrada funcional; mejorar control excéntrico de rodilla</td>
+        <td><span class="badge badge-impl">Step / escalón</span></td>
+        <td><span class="badge badge-dif-moderada">Moderada</span></td>
+        <td><span class="badge badge-tipo-funcional">Funcional</span></td>
+        <td class="dosif"><strong>3 × 10 rep por lado</strong><br>Paso lento y controlado<br>Apoyo lateral si necesario</td>
+        <td class="prog-reg"><span class="arrow">↑</span> Escalón más alto (20 cm) · sin apoyo · carga</td>
+        <td class="prog-reg"><span class="arrow-down">↓</span> Sentadilla bipodal en silla</td>
+        <td class="td-obs">Replica subir escaleras. Supervisar no valgo de rodilla. Requiere más atención clínica que SLR: ideal cuando hay 1–2 pacientes.</td>
+      </tr>
+      <tr>
+        <td>Bicicleta estática/recumbente (cicloergometría de baja resistencia)</td>
+        <td class="td-objetivo">Mejorar movilidad articular, lubricación sinovial y capacidad aeróbica sin impacto</td>
+        <td><span class="badge badge-impl">Bicicleta estática / recumbente</span></td>
+        <td><span class="badge badge-dif-leve">Leve</span></td>
+        <td><span class="badge badge-tipo-movilidad">Movilidad</span></td>
+        <td class="dosif"><strong>15–20 min</strong><br>Resistencia mínima-baja<br>60–70 rpm</td>
+        <td class="prog-reg"><span class="arrow">↑</span> Resistencia moderada · duración 30 min</td>
+        <td class="prog-reg"><span class="arrow-down">↓</span> 10 min · bicicleta recumbente</td>
+        <td class="td-obs">Excelente para supervisión simultánea: paciente trabaja solo. Recumbente preferible en AM con equilibrio comprometido. Ajustar sillín: rodilla casi extendida en pedaleo.</td>
+      </tr>
+      <tr>
+        <td>Fortalecimiento de isquiotibiales en decúbito prono (curl de rodilla con Theraband)</td>
+        <td class="td-objetivo">Mejorar balance agonista-antagonista cuádriceps/isquiotibiales; reducir carga femoropatelar</td>
+        <td><span class="badge badge-impl">Theraband / mancuerna tobillo</span></td>
+        <td><span class="badge badge-dif-leve">Leve</span></td>
+        <td><span class="badge badge-tipo-fortalecimiento">Fortalecimiento</span></td>
+        <td class="dosif"><strong>3 × 12–15 rep</strong><br>Rango 0–90° flexión<br>Fase excéntrica 3 seg</td>
+        <td class="prog-reg"><span class="arrow">↑</span> Mayor resistencia · máquina curl</td>
+        <td class="prog-reg"><span class="arrow-down">↓</span> Sin resistencia · solo ROM activo</td>
+        <td class="td-obs">Frecuentemente olvidado en gonartrosis. Esencial para balance articular. Fácil en colchoneta. No olvidar en protocolo de gonartrosis.</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<!-- ======================== LUMBAR ======================== -->
+<div id="sec-lumbar" class="region-section">
+  <div class="region-header">
+    <div class="region-dot dot-lumbar"></div>
+    <div class="region-title">Columna Lumbar</div>
+    <div class="region-count">7 ejercicios</div>
+    <div class="region-subtitle">Lumbalgia crónica · HNP · Discopatía · Estenosis</div>
+  </div>
+  <div class="evidence-note">
+    <strong>Evidencia:</strong> Network meta-análisis 2023 (PMC10687566): ejercicios de estabilización/core (SMD −1.13) y control motor son superiores a rehabilitación convencional en lumbalgia crónica para dolor Y función. Resistance Training (PubMed 2016, Pinto et al.): eficaz en prevención y tratamiento de lumbalgia, sarcopenia y OA en AM. El ejercicio de estabilización lumbar tiene el mayor cuerpo de evidencia en APS/CCR.
+  </div>
+  <div class="ex-table-wrapper">
+  <table>
+    <thead>
+      <tr>
+        <th>Nombre técnico</th>
+        <th>Objetivo principal</th>
+        <th>Implemento</th>
+        <th>Dificultad</th>
+        <th>Tipo</th>
+        <th>Dosificación CCR</th>
+        <th>Progresión</th>
+        <th>Regresión</th>
+        <th>Observaciones clínicas</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Activación de transverso abdominal (abdominal drawing-in maneuver)</td>
+        <td class="td-objetivo">Activar musculatura estabilizadora profunda lumbar (TA, multífidos); base de estabilización</td>
+        <td><span class="badge badge-impl">Colchoneta</span></td>
+        <td><span class="badge badge-dif-leve">Leve</span></td>
+        <td><span class="badge badge-tipo-motor">Control motor</span></td>
+        <td class="dosif"><strong>3 × 10 rep</strong><br>Mantención 10 seg<br>Enseñar antes de todos los ejercicios</td>
+        <td class="prog-reg"><span class="arrow">↑</span> Integrar en todos los ejercicios dinámicos</td>
+        <td class="prog-reg"><span class="arrow-down">↓</span> En sedente · decúbito supino con apoyo</td>
+        <td class="td-obs">PREREQUISITO para todos los ejercicios de columna. Enseñar individualmente antes de progresar. Verificar que no haya apnea ni activación de recto abdominal.</td>
+      </tr>
+      <tr>
+        <td>Puente gluteolumbar (bridging) en decúbito supino</td>
+        <td class="td-objetivo">Fortalecer glúteo mayor, isquiotibiales y extensores lumbares; estabilización lumbo-pélvica</td>
+        <td><span class="badge badge-impl">Colchoneta</span></td>
+        <td><span class="badge badge-dif-leve">Leve</span></td>
+        <td><span class="badge badge-tipo-estabilidad">Estabilidad</span></td>
+        <td class="dosif"><strong>3 × 12–15 rep</strong><br>Mantención 3–5 seg en cima<br>Pies a ancho de cadera</td>
+        <td class="prog-reg"><span class="arrow">↑</span> Monopodal · Theraband en rodillas · balón</td>
+        <td class="prog-reg"><span class="arrow-down">↓</span> Solo activación glútea sin elevación (clam)</td>
+        <td class="td-obs">El ejercicio de estabilización lumbar más versátil. Alta tolerancia en AM. Verificar posición neutral lumbar en la cima. Fácil de supervisar en colchoneta.</td>
+      </tr>
+      <tr>
+        <td>Cuadrupedia con extensión alterna de brazo y pierna (bird-dog)</td>
+        <td class="td-objetivo">Activar extensores lumbares y glúteo mayor en disociación; control motor lumbopélvico</td>
+        <td><span class="badge badge-impl">Colchoneta</span></td>
+        <td><span class="badge badge-dif-moderada">Moderada</span></td>
+        <td><span class="badge badge-tipo-motor">Control motor</span></td>
+        <td class="dosif"><strong>3 × 10 rep por lado</strong><br>Mantención 3–5 seg<br>Movimiento lento sin pérdida de neutro</td>
+        <td class="prog-reg"><span class="arrow">↑</span> Theraband en tobillo · superficies inestables</td>
+        <td class="prog-reg"><span class="arrow-down">↓</span> Solo extensión de pierna (sin brazo)</td>
+        <td class="td-obs">Requiere más instrucción inicial. Supervisar que no haya rotación de pelvis ni extensión lumbar excesiva. Ideal en fases crónicas estables.</td>
+      </tr>
+      <tr>
+        <td>Marcha en colchoneta (marcha terapéutica con control core)</td>
+        <td class="td-objetivo">Integrar estabilización lumbar en patrón de marcha; reducir dolor en AVD</td>
+        <td><span class="badge badge-impl">Colchoneta / barras paralelas</span></td>
+        <td><span class="badge badge-dif-leve">Leve</span></td>
+        <td><span class="badge badge-tipo-funcional">Funcional</span></td>
+        <td class="dosif"><strong>10–15 min</strong><br>Velocidad normal-baja<br>Con activación core consciente</td>
+        <td class="prog-reg"><span class="arrow">↑</span> Trotadora a baja velocidad · con carga</td>
+        <td class="prog-reg"><span class="arrow-down">↓</span> Marcha sentado (rodillas alternadas)</td>
+        <td class="td-obs">Ideal para supervisión simultánea. La marcha es el ejercicio más funcional en lumbalgia crónica. Excelente tolerancia en AM.</td>
+      </tr>
+      <tr>
+        <td>Flexión de columna lumbar en decúbito supino (rodillas al pecho)</td>
+        <td class="td-objetivo">Reducir tono musculatura paravertebral; alivio de dolor en extensión (estenosis, HNP posterolateral)</td>
+        <td><span class="badge badge-impl">Colchoneta</span></td>
+        <td><span class="badge badge-dif-leve">Leve</span></td>
+        <td><span class="badge badge-tipo-movilidad">Movilidad</span></td>
+        <td class="dosif"><strong>3 × 10 rep</strong><br>Mantención 10–15 seg<br>Bilateral y unilateral</td>
+        <td class="prog-reg"><span class="arrow">↑</span> Rotación lumbar activa asociada</td>
+        <td class="prog-reg"><span class="arrow-down">↓</span> Una rodilla sola · sin tensión</td>
+        <td class="td-obs">Primera opción en estenosis lumbar y HNP. CONTRAINDICADO en hernias con predominio flexor (fenómeno de centralización inverso). Verificar dirección de preferencia.</td>
+      </tr>
+      <tr>
+        <td>Extensión lumbar en prono (McKenzie press-up modificado)</td>
+        <td class="td-objetivo">Centralizar síntomas en HNP posterolateral; reducir dolor irradiado en extensión</td>
+        <td><span class="badge badge-impl">Colchoneta</span></td>
+        <td><span class="badge badge-dif-leve">Leve</span></td>
+        <td><span class="badge badge-tipo-movilidad">Movilidad</span></td>
+        <td class="dosif"><strong>10 rep</strong><br>Mantención 1–2 seg<br>Solo si centraliza síntomas</td>
+        <td class="prog-reg"><span class="arrow">↑</span> Extensión de pie en bipedestación (standing back extension)</td>
+        <td class="prog-reg"><span class="arrow-down">↓</span> Solo posición prono de reposo</td>
+        <td class="td-obs">USAR SOLO si la extensión centraliza síntomas (fenómeno de preferencia direccional). Contraindicado en estenosis de canal, espondilolistesis sintomática.</td>
+      </tr>
+      <tr>
+        <td>Fortalecimiento de glúteo medio en decúbito lateral (abducción con Theraband)</td>
+        <td class="td-objetivo">Fortalecer estabilizadores laterales de pelvis; corregir Trendelenburg; reducir carga lumbar</td>
+        <td><span class="badge badge-impl">Theraband</span></td>
+        <td><span class="badge badge-dif-leve">Leve</span></td>
+        <td><span class="badge badge-tipo-fortalecimiento">Fortalecimiento</span></td>
+        <td class="dosif"><strong>3 × 15 rep por lado</strong><br>Theraband en rodillas o tobillos<br>Control pélvico neutro</td>
+        <td class="prog-reg"><span class="arrow">↑</span> Abducción bipodal en step · monopodal</td>
+        <td class="prog-reg"><span class="arrow-down">↓</span> Sin Theraband · solo abducción activa</td>
+        <td class="td-obs">Frecuentemente olvidado en lumbalgia. El glúteo medio débil genera hiperpresión lumbar en marcha. Ejercicio multipropósito (lumbar + cadera).</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<!-- ======================== CERVICAL ======================== -->
+<div id="sec-cervical" class="region-section">
+  <div class="region-header">
+    <div class="region-dot dot-cervical"></div>
+    <div class="region-title">Cervical</div>
+    <div class="region-count">5 ejercicios</div>
+    <div class="region-subtitle">Cervicalgia mecánica · Cervicobraquialgia · Tensión cervical crónica</div>
+  </div>
+  <div class="evidence-note">
+    <strong>Evidencia:</strong> SR 2017 (PubMed, Effective treatment options MSK pain primary care): evidencia moderada-fuerte para ejercicio combinado (fortalecimiento + estabilización cervical) en cervicalgia. El fortalecimiento de flexores craneocervicales profundos y la estabilización escapulotorácica tienen mayor evidencia en cervicalgia crónica. La combinación ejercicio + educación es el estándar APS.
+  </div>
+  <div class="ex-table-wrapper">
+  <table>
+    <thead>
+      <tr>
+        <th>Nombre técnico</th>
+        <th>Objetivo principal</th>
+        <th>Implemento</th>
+        <th>Dificultad</th>
+        <th>Tipo</th>
+        <th>Dosificación CCR</th>
+        <th>Progresión</th>
+        <th>Regresión</th>
+        <th>Observaciones clínicas</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Flexión craneocervical profunda (chin tuck / retracción cervical)</td>
+        <td class="td-objetivo">Activar flexores cervicales profundos (largo del cuello); corregir postura cabeza adelantada</td>
+        <td><span class="badge badge-impl">Sin implemento</span></td>
+        <td><span class="badge badge-dif-leve">Leve</span></td>
+        <td><span class="badge badge-tipo-motor">Control motor</span></td>
+        <td class="dosif"><strong>3 × 10 rep</strong><br>Mantención 10 seg<br>Sedente y de pie</td>
+        <td class="prog-reg"><span class="arrow">↑</span> Con resistencia manual · Theraband occipital</td>
+        <td class="prog-reg"><span class="arrow-down">↓</span> Decúbito supino sin resistencia</td>
+        <td class="td-obs">EJERCICIO BASE en cervicalgia. Corrige head-forward posture. Fácil de enseñar: "haga doble mentón". Supervisión instantánea. Excelente adherencia.</td>
+      </tr>
+      <tr>
+        <td>Movilización activa cervical en arcos de movilidad (AROM cervical)</td>
+        <td class="td-objetivo">Mantener ROM cervical; reducir rigidez articular y contractura muscular periarticular</td>
+        <td><span class="badge badge-impl">Sin implemento</span></td>
+        <td><span class="badge badge-dif-leve">Leve</span></td>
+        <td><span class="badge badge-tipo-movilidad">Movilidad</span></td>
+        <td class="dosif"><strong>3 × 10 rep cada movimiento</strong><br>Flexión, extensión, lat, rotación<br>Ritmo lento</td>
+        <td class="prog-reg"><span class="arrow">↑</span> Con resistencia manual isométrica</td>
+        <td class="prog-reg"><span class="arrow-down">↓</span> Solo rotación suave · 3 rep</td>
+        <td class="td-obs">Iniciar por movimiento libre de dolor. DETENER si hay parestesias o mareo. Evitar circunducciones en AM (puede provocar vértigo).</td>
+      </tr>
+      <tr>
+        <td>Fortalecimiento isométrico cervical multidireccional</td>
+        <td class="td-objetivo">Fortalecer músculos cervicales en todas las direcciones; reducir carga discal dinámica</td>
+        <td><span class="badge badge-impl">Mano del paciente / Theraband</span></td>
+        <td><span class="badge badge-dif-leve">Leve–Moderada</span></td>
+        <td><span class="badge badge-tipo-fortalecimiento">Fortalecimiento</span></td>
+        <td class="dosif"><strong>3 × 10 rep × dirección</strong><br>Mantención 5–7 seg<br>Resistencia manual del propio paciente</td>
+        <td class="prog-reg"><span class="arrow">↑</span> Theraband · mayor tiempo de mantención</td>
+        <td class="prog-reg"><span class="arrow-down">↓</span> Solo flexión isométrica (chin tuck)</td>
+        <td class="td-obs">El paciente usa su propia mano como resistencia: muy útil en atención simultánea. Cuatro direcciones: flexión, extensión, lat derecha, lat izquierda.</td>
+      </tr>
+      <tr>
+        <td>Elongación de trapecios superiores y escalenos en sedente</td>
+        <td class="td-objetivo">Reducir tensión musculatura cervical superior; mejorar apertura costal y postura</td>
+        <td><span class="badge badge-impl">Sin implemento / silla</span></td>
+        <td><span class="badge badge-dif-leve">Leve</span></td>
+        <td><span class="badge badge-tipo-movilidad">Movilidad</span></td>
+        <td class="dosif"><strong>3 × 30 seg por lado</strong><br>Inclinación lateral con fijación ipsilateral<br>Suave, sin rebote</td>
+        <td class="prog-reg"><span class="arrow">↑</span> Añadir rotación contralateral</td>
+        <td class="prog-reg"><span class="arrow-down">↓</span> Solo inclinación libre sin fijación</td>
+        <td class="td-obs">Alta tolerancia y adherencia. Útil como calentamiento y cierre de sesión. Enseñar a realizarlo en casa 3x/día. Verificar que no haya elevación contralateral de hombro.</td>
+      </tr>
+      <tr>
+        <td>Retracción escapular + fortalecimiento trapecio medio-inferior (remo con Theraband)</td>
+        <td class="td-objetivo">Fortalecer trapecio medio/inferior; reducir carga cervical por hipercifosis torácica</td>
+        <td><span class="badge badge-impl">Theraband</span></td>
+        <td><span class="badge badge-dif-leve">Leve</span></td>
+        <td><span class="badge badge-tipo-fortalecimiento">Fortalecimiento</span></td>
+        <td class="dosif"><strong>3 × 15 rep</strong><br>Theraband a altura media<br>Retracción escapular completa</td>
+        <td class="prog-reg"><span class="arrow">↑</span> Mayor resistencia · mancuerna en remo</td>
+        <td class="prog-reg"><span class="arrow-down">↓</span> Solo retracción isométrica sin Theraband</td>
+        <td class="td-obs">Ejercicio multipropósito (cervical + hombro). Hipercifosis torácica es causa frecuente de cervicalgia en AM. Fácil de supervisar: error visible inmediatamente.</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<!-- ======================== TOBILLO ======================== -->
+<div id="sec-tobillo" class="region-section">
+  <div class="region-header">
+    <div class="region-dot dot-tobillo"></div>
+    <div class="region-title">Tobillo / Pie</div>
+    <div class="region-count">5 ejercicios</div>
+    <div class="region-subtitle">Fascitis plantar · Esguince de tobillo · Tendinopatía aquílea</div>
+  </div>
+  <div class="evidence-note">
+    <strong>Evidencia:</strong> SR y guías clínicas (NICE, JOSPT): ejercicio excéntrico de tríceps sural (protocolo Alfredson modificado) es primera línea en tendinopatía aquílea y fascitis plantar. El fortalecimiento y propiocepción de tobillo tienen evidencia A en esguince crónico y prevención de recidiva. En AM, el equilibrio unipodal y el fortalecimiento de tobillo son intervenciones de alta prioridad por su impacto en riesgo de caída.
+  </div>
+  <div class="ex-table-wrapper">
+  <table>
+    <thead>
+      <tr>
+        <th>Nombre técnico</th>
+        <th>Objetivo principal</th>
+        <th>Implemento</th>
+        <th>Dificultad</th>
+        <th>Tipo</th>
+        <th>Dosificación CCR</th>
+        <th>Progresión</th>
+        <th>Regresión</th>
+        <th>Observaciones clínicas</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Elevación de talones bipodal excéntrica (heel raise excéntrico)</td>
+        <td class="td-objetivo">Fortalecer tríceps sural; estimular remodelación tendón aquíleo; tratar fascitis plantar</td>
+        <td><span class="badge badge-impl">Escalón / Step</span></td>
+        <td><span class="badge badge-dif-leve">Leve–Moderada</span></td>
+        <td><span class="badge badge-tipo-fortalecimiento">Fortalecimiento</span></td>
+        <td class="dosif"><strong>3 × 15 rep</strong><br>Fase excéntrica 3–4 seg<br>Subida bipodal, bajada unipodal</td>
+        <td class="prog-reg"><span class="arrow">↑</span> Unipodal completo · mochila con peso</td>
+        <td class="prog-reg"><span class="arrow-down">↓</span> Bipodal sin excéntrico · sentado</td>
+        <td class="td-obs">Protocolo Alfredson: primera línea en tendinopatía aquílea y fascitis plantar. Puede haber molestia leve: tolerable. Realizarlo en step para mayor amplitud plantar.</td>
+      </tr>
+      <tr>
+        <td>Inversión-eversión de tobillo con Theraband en sedente</td>
+        <td class="td-objetivo">Fortalecer peroneos y tibial posterior; restaurar estabilidad dinámica post-esguince</td>
+        <td><span class="badge badge-impl">Theraband</span></td>
+        <td><span class="badge badge-dif-leve">Leve</span></td>
+        <td><span class="badge badge-tipo-fortalecimiento">Fortalecimiento</span></td>
+        <td class="dosif"><strong>3 × 15 rep cada dirección</strong><br>Movimiento suave y controlado<br>Sin compensación de rodilla</td>
+        <td class="prog-reg"><span class="arrow">↑</span> En bípedo · superficies inestables</td>
+        <td class="prog-reg"><span class="arrow-down">↓</span> Solo movilización activa libre</td>
+        <td class="td-obs">Permite atención simultánea: paciente sentado trabaja solo. Cuatro direcciones: dorsiflexión, flexión plantar, inversión, eversión.</td>
+      </tr>
+      <tr>
+        <td>Balance unipodal estático con apoyo (propiocepción de tobillo)</td>
+        <td class="td-objetivo">Mejorar propiocepción y control neuromuscular de tobillo; prevención caída en AM</td>
+        <td><span class="badge badge-impl">Barras paralelas / silla</span></td>
+        <td><span class="badge badge-dif-leve">Leve</span></td>
+        <td><span class="badge badge-tipo-estabilidad">Estabilidad</span></td>
+        <td class="dosif"><strong>3 × 30 seg por pie</strong><br>Iniciar con apoyo de 1 dedo<br>Ojos abiertos → cerrados</td>
+        <td class="prog-reg"><span class="arrow">↑</span> Sin apoyo · superficie foam · ojos cerrados</td>
+        <td class="prog-reg"><span class="arrow-down">↓</span> Bipodal con apoyo suave</td>
+        <td class="td-obs">Imprescindible en AM: doble función (tobillo + caída). Supervisar cerca en primera sesión. Siempre con apoyo de seguridad accesible.</td>
+      </tr>
+      <tr>
+        <td>Elongación de fascia plantar con automasaje (rolling plantar)</td>
+        <td class="td-objetivo">Reducir tensión de fascia plantar; mejorar tolerancia a la carga en fascitis plantar</td>
+        <td><span class="badge badge-impl">Foam roller / pelota de tenis</span></td>
+        <td><span class="badge badge-dif-leve">Leve</span></td>
+        <td><span class="badge badge-tipo-movilidad">Movilidad</span></td>
+        <td class="dosif"><strong>2–3 min por pie</strong><br>Presión moderada tolerable<br>Al inicio de sesión y en casa (mañana)</td>
+        <td class="prog-reg"><span class="arrow">↑</span> Bípedo con peso corporal</td>
+        <td class="prog-reg"><span class="arrow-down">↓</span> Solo elongación pasiva de dedos</td>
+        <td class="td-obs">Alta adherencia: se puede hacer en casa. Especialmente útil matinal (primer paso del día). Pelota de tenis helada potencia efecto antiinflamatorio.</td>
+      </tr>
+      <tr>
+        <td>Dorsiflexión activa de tobillo en posición de estocada (knee to wall)</td>
+        <td class="td-objetivo">Recuperar rango de dorsiflexión; mejorar tolerancia a carga en fascitis y esguince crónico</td>
+        <td><span class="badge badge-impl">Pared / barras paralelas</span></td>
+        <td><span class="badge badge-dif-leve">Leve–Moderada</span></td>
+        <td><span class="badge badge-tipo-movilidad">Movilidad</span></td>
+        <td class="dosif"><strong>3 × 10 rep por lado</strong><br>Rodilla toca pared sin elevar talón<br>Medir distancia pie-pared</td>
+        <td class="prog-reg"><span class="arrow">↑</span> Mayor distancia pie-pared · con carga</td>
+        <td class="prog-reg"><span class="arrow-down">↓</span> Dorsiflexión en sedente con Theraband</td>
+        <td class="td-obs">La reducción de dorsiflexión (&lt;10 cm) es factor de riesgo en fascitis y esguince. Medir y registrar en RAYEN como parámetro evolutivo objetivo.</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<!-- ======================== CADERA ======================== -->
+<div id="sec-cadera" class="region-section">
+  <div class="region-header">
+    <div class="region-dot dot-cadera"></div>
+    <div class="region-title">Cadera</div>
+    <div class="region-count">5 ejercicios</div>
+    <div class="region-subtitle">Coxartrosis · Síndrome de cadera · Tendinopatía glútea</div>
+  </div>
+  <div class="evidence-note">
+    <strong>Evidencia:</strong> Meta-análisis 2024 (J Pers Med, n=1712): entrenamiento de resistencia mejora dolor (SMD −0.48), fuerza y función en OA de cadera y rodilla. Meta-análisis dosis-respuesta 2025: efecto significativo a ≥9 semanas. En coxartrosis, el fortalecimiento de glúteo mayor y medio tiene evidencia sólida para reducir dolor y mejorar función. El ejercicio en agua o bicicleta recumbente es primera línea en AM con baja tolerancia al impacto.
+  </div>
+  <div class="ex-table-wrapper">
+  <table>
+    <thead>
+      <tr>
+        <th>Nombre técnico</th>
+        <th>Objetivo principal</th>
+        <th>Implemento</th>
+        <th>Dificultad</th>
+        <th>Tipo</th>
+        <th>Dosificación CCR</th>
+        <th>Progresión</th>
+        <th>Regresión</th>
+        <th>Observaciones clínicas</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Abducción de cadera en decúbito lateral con Theraband (fortalecimiento glúteo medio)</td>
+        <td class="td-objetivo">Fortalecer glúteo medio; estabilizar pelvis en carga; reducir dolor en coxartrosis y tendinopatía glútea</td>
+        <td><span class="badge badge-impl">Theraband / colchoneta</span></td>
+        <td><span class="badge badge-dif-leve">Leve</span></td>
+        <td><span class="badge badge-tipo-fortalecimiento">Fortalecimiento</span></td>
+        <td class="dosif"><strong>3 × 15 rep por lado</strong><br>Pelvis neutra, sin rotación<br>Theraband en rodillas</td>
+        <td class="prog-reg"><span class="arrow">↑</span> Bípedo con Theraband · monopodal lateral</td>
+        <td class="prog-reg"><span class="arrow-down">↓</span> Sin Theraband · abducción libre</td>
+        <td class="td-obs">Ejercicio multipropósito (cadera + lumbar). En tendinopatía glútea: EVITAR cruzar piernas al inicio. Fácil supervisión en colchoneta.</td>
+      </tr>
+      <tr>
+        <td>Extensión de cadera en prono (fortalecimiento glúteo mayor)</td>
+        <td class="td-objetivo">Fortalecer glúteo mayor; mejorar extensión de cadera en marcha; reducir carga lumbar</td>
+        <td><span class="badge badge-impl">Colchoneta / Theraband</span></td>
+        <td><span class="badge badge-dif-leve">Leve</span></td>
+        <td><span class="badge badge-tipo-fortalecimiento">Fortalecimiento</span></td>
+        <td class="dosif"><strong>3 × 12 rep por lado</strong><br>Mantención 3 seg en cima<br>Sin extensión lumbar compensatoria</td>
+        <td class="prog-reg"><span class="arrow">↑</span> Theraband en tobillo · puente monopodal</td>
+        <td class="prog-reg"><span class="arrow-down">↓</span> Contracción isométrica glútea en decúbito</td>
+        <td class="td-obs">Fundamental en coxartrosis y tendinopatía glútea. Supervisa que la extensión sea de cadera, no lumbar. Tolerable en la gran mayoría de AM.</td>
+      </tr>
+      <tr>
+        <td>Puente gluteolumbar monopodal (single-leg bridge)</td>
+        <td class="td-objetivo">Fortalecer glúteo mayor e isquiotibiales con desafío de control pélvico; mejorar estabilidad unilateral</td>
+        <td><span class="badge badge-impl">Colchoneta</span></td>
+        <td><span class="badge badge-dif-moderada">Moderada</span></td>
+        <td><span class="badge badge-tipo-estabilidad">Estabilidad</span></td>
+        <td class="dosif"><strong>3 × 10 rep por lado</strong><br>Mantención 3 seg<br>Pelvis horizontal sin rotación</td>
+        <td class="prog-reg"><span class="arrow">↑</span> Con Theraband en rodillas · balón bajo pies</td>
+        <td class="prog-reg"><span class="arrow-down">↓</span> Puente bipodal</td>
+        <td class="td-obs">Progresión natural del puente bipodal. Verificar que la pelvis no rote. Excelente para detectar asimetrías glúteas entre hemicuerpos.</td>
+      </tr>
+      <tr>
+        <td>Marcha lateral con Theraband (side-step con miniband)</td>
+        <td class="td-objetivo">Fortalecer glúteo medio y rotadores externos de cadera en cadena cinética funcional</td>
+        <td><span class="badge badge-impl">Theraband / miniband</span></td>
+        <td><span class="badge badge-dif-moderada">Moderada</span></td>
+        <td><span class="badge badge-tipo-funcional">Funcional</span></td>
+        <td class="dosif"><strong>3 × 10 pasos por lado</strong><br>Theraband en rodillas<br>Semi-squat controlado</td>
+        <td class="prog-reg"><span class="arrow">↑</span> Theraband en tobillos · más resistencia</td>
+        <td class="prog-reg"><span class="arrow-down">↓</span> Abducción en decúbito lateral</td>
+        <td class="td-obs">Requiere espacio. Supervisar que no haya inclinación lateral de tronco. Excelente integración funcional de glúteo medio. Fácil demostración visual.</td>
+      </tr>
+      <tr>
+        <td>Elongación de flexores de cadera en posición de caballero (hip flexor stretch)</td>
+        <td class="td-objetivo">Reducir tensión de psoas e ilíaco; mejorar extensión de cadera en marcha; aliviar dolor anterior</td>
+        <td><span class="badge badge-impl">Colchoneta / silla</span></td>
+        <td><span class="badge badge-dif-leve">Leve</span></td>
+        <td><span class="badge badge-tipo-movilidad">Movilidad</span></td>
+        <td class="dosif"><strong>3 × 30 seg por lado</strong><br>Posición de caballero o de pie<br>Pelvis en neutro</td>
+        <td class="prog-reg"><span class="arrow">↑</span> Con extensión de tronco · brazo contralateral</td>
+        <td class="prog-reg"><span class="arrow-down">↓</span> Decúbito supino con pierna colgando</td>
+        <td class="td-obs">La retracción de flexores de cadera es muy frecuente en AM sedentarios. Puede hacerse de pie con apoyo en silla: más fácil para AM con dificultad en colchoneta.</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<!-- ======================== TOP 10 ======================== -->
+<div id="sec-top10" class="region-section">
+  <div class="region-header">
+    <div class="region-dot" style="background:var(--amber);"></div>
+    <div class="region-title" style="color:var(--amber);">Top 10 — Selección de Elite</div>
+    <div class="region-count">10 ejercicios clave</div>
+    <div class="region-subtitle">Mayor reutilización · Mayor impacto · Mejor relación esfuerzo-beneficio en CCR</div>
+  </div>
+  <div class="evidence-note">
+    Los siguientes 10 ejercicios fueron seleccionados por: <strong>(1)</strong> mayor nivel de evidencia científica, <strong>(2)</strong> mayor reutilización entre patologías, <strong>(3)</strong> mejor tolerancia en adulto mayor, <strong>(4)</strong> facilidad de supervisión en atención simultánea, y <strong>(5)</strong> utilidad inmediata en registro clínico RAYEN/ficha.
+  </div>
+  <div class="legend">
+    <div class="legend-item"><span class="badge badge-tipo-fortalecimiento">Fortalecimiento</span></div>
+    <div class="legend-item"><span class="badge badge-tipo-motor">Control motor</span></div>
+    <div class="legend-item"><span class="badge badge-tipo-funcional">Funcional</span></div>
+    <div class="legend-item"><span class="badge badge-tipo-estabilidad">Estabilidad</span></div>
+    <div class="legend-item"><span class="badge badge-tipo-movilidad">Movilidad</span></div>
+    <div class="legend-item"><span class="badge badge-dif-leve">Leve</span></div>
+    <div class="legend-item"><span class="badge badge-dif-moderada">Moderada</span></div>
+  </div>
+  <div class="top10-grid">
+
+    <div class="top10-card">
+      <div class="top10-rank">01</div>
+      <div class="top10-name">Puente gluteolumbar bipodal (Bridging)</div>
+      <div class="top10-region">Lumbar · Cadera · Rodilla</div>
+      <div class="top10-tags">
+        <span class="badge badge-tipo-estabilidad">Estabilidad</span>
+        <span class="badge badge-dif-leve">Leve</span>
+        <span class="badge badge-impl">Colchoneta</span>
+      </div>
+      <div class="top10-why">El ejercicio de mayor versatilidad en toda la biblioteca. Fortalece glúteo mayor, isquiotibiales y estabilizadores lumbares simultáneamente. Alta tolerancia en AM. Fácil supervisión grupal. Progresión natural a monopodal.</div>
+    </div>
+
+    <div class="top10-card">
+      <div class="top10-rank">02</div>
+      <div class="top10-name">Sit-to-stand modificado (sentadilla en silla)</div>
+      <div class="top10-region">Rodilla · Cadera · Funcional global</div>
+      <div class="top10-tags">
+        <span class="badge badge-tipo-funcional">Funcional</span>
+        <span class="badge badge-dif-leve">Leve</span>
+        <span class="badge badge-impl">Silla</span>
+      </div>
+      <div class="top10-why">El ejercicio funcional más importante para adulto mayor. Replica la AVD más demandante (levantarse de silla). Cuádriceps + glúteo en cadena cerrada. Fácil de dosificar y supervisar. Impacto directo en independencia funcional.</div>
+    </div>
+
+    <div class="top10-card">
+      <div class="top10-rank">03</div>
+      <div class="top10-name">Retracción-depresión escapular (squeeze + remo Theraband)</div>
+      <div class="top10-region">Hombro · Cervical · Postura</div>
+      <div class="top10-tags">
+        <span class="badge badge-tipo-motor">Control motor</span>
+        <span class="badge badge-dif-leve">Leve</span>
+        <span class="badge badge-impl">Theraband</span>
+      </div>
+      <div class="top10-why">Ejercicio multipropósito: trata hombro Y cervical simultáneamente. Corrige hipercifosis torácica —causa raíz de múltiples patologías en AM. Fácil de enseñar. Error de técnica visible inmediatamente desde cualquier ángulo.</div>
+    </div>
+
+    <div class="top10-card">
+      <div class="top10-rank">04</div>
+      <div class="top10-name">Abducción de cadera con Theraband (glúteo medio)</div>
+      <div class="top10-region">Cadera · Lumbar · Rodilla · Tobillo</div>
+      <div class="top10-tags">
+        <span class="badge badge-tipo-fortalecimiento">Fortalecimiento</span>
+        <span class="badge badge-dif-leve">Leve</span>
+        <span class="badge badge-impl">Theraband</span>
+      </div>
+      <div class="top10-why">El glúteo medio es el estabilizador más crítico del miembro inferior. Su debilidad causa o agrava: lumbalgia, gonartrosis, coxartrosis, esguince y fascitis. Es el ejercicio con mayor impacto en cadena cinética completa. Reutilizable en todas las regiones inferiores.</div>
+    </div>
+
+    <div class="top10-card">
+      <div class="top10-rank">05</div>
+      <div class="top10-name">Bicicleta estática/recumbente (cicloergometría de baja resistencia)</div>
+      <div class="top10-region">Rodilla · Cadera · Capacidad aeróbica</div>
+      <div class="top10-tags">
+        <span class="badge badge-tipo-movilidad">Movilidad</span>
+        <span class="badge badge-dif-leve">Leve</span>
+        <span class="badge badge-impl">Bicicleta recumbente</span>
+      </div>
+      <div class="top10-why">Herramienta de oro para supervisión simultánea: el paciente trabaja solo 15–20 min sin riesgo. Movilidad articular sin impacto. Beneficio aeróbico, sinovial y funcional. Baja barrera de entrada para AM con dolor. Excelente como calentamiento universal.</div>
+    </div>
+
+    <div class="top10-card">
+      <div class="top10-rank">06</div>
+      <div class="top10-name">Chin tuck (flexión craneocervical profunda)</div>
+      <div class="top10-region">Cervical · Hombro · Postura</div>
+      <div class="top10-tags">
+        <span class="badge badge-tipo-motor">Control motor</span>
+        <span class="badge badge-dif-leve">Leve</span>
+        <span class="badge badge-impl">Sin implemento</span>
+      </div>
+      <div class="top10-why">El ejercicio más costo-efectivo de la biblioteca: cero implementos, máximo impacto en cervicalgia. Activa los flexores profundos ignorados. Fácil de enseñar en 30 segundos. Adherencia alta: se puede hacer en el trabajo. Supervisión instantánea.</div>
+    </div>
+
+    <div class="top10-card">
+      <div class="top10-rank">07</div>
+      <div class="top10-name">Activación de transverso abdominal (drawing-in)</div>
+      <div class="top10-region">Lumbar · HNP · Discopatía · Core</div>
+      <div class="top10-tags">
+        <span class="badge badge-tipo-motor">Control motor</span>
+        <span class="badge badge-dif-leve">Leve</span>
+        <span class="badge badge-impl">Colchoneta</span>
+      </div>
+      <div class="top10-why">Prerequisito absoluto de toda terapia lumbar. Sin activación del TA, cualquier ejercicio de columna es subóptimo. Alta evidencia en lumbalgia crónica. Debe enseñarse antes de cualquier otro ejercicio en patología lumbar. Base de todos los patrones de movimiento.</div>
+    </div>
+
+    <div class="top10-card">
+      <div class="top10-rank">08</div>
+      <div class="top10-name">Balance unipodal estático con apoyo de seguridad</div>
+      <div class="top10-region">Tobillo · Cadera · Prevención de caída</div>
+      <div class="top10-tags">
+        <span class="badge badge-tipo-estabilidad">Estabilidad</span>
+        <span class="badge badge-dif-leve">Leve</span>
+        <span class="badge badge-impl">Barras paralelas</span>
+      </div>
+      <div class="top10-why">Doble propósito clínico: trata el tobillo Y previene caídas en AM. Es la intervención de mayor impacto en calidad de vida del adulto mayor. Fácil progresión (ojos cerrados, foam, dinámico). Siempre incluir en cualquier protocolo de AM independientemente de la patología principal.</div>
+    </div>
+
+    <div class="top10-card">
+      <div class="top10-rank">09</div>
+      <div class="top10-name">Fortalecimiento de rotadores externos con Theraband (RE glenohumeral)</div>
+      <div class="top10-region">Hombro · Manguito rotador · Postura</div>
+      <div class="top10-tags">
+        <span class="badge badge-tipo-fortalecimiento">Fortalecimiento</span>
+        <span class="badge badge-dif-leve">Leve</span>
+        <span class="badge badge-impl">Theraband</span>
+      </div>
+      <div class="top10-why">Mayor evidencia individual en síndrome de manguito rotador (JOSPT 2024). Alta adherencia, seguro, progresión clara, fácil de enseñar. El desequilibrio RI/RE glenohumeral es el hallazgo más frecuente en patología de hombro en APS. Ejercicio en decúbito: sin riesgo de caída.</div>
+    </div>
+
+    <div class="top10-card">
+      <div class="top10-rank">10</div>
+      <div class="top10-name">Heel raise excéntrico en escalón</div>
+      <div class="top10-region">Tobillo · Pie · Fascitis · Tendinopatía</div>
+      <div class="top10-tags">
+        <span class="badge badge-tipo-fortalecimiento">Fortalecimiento</span>
+        <span class="badge badge-dif-leve">Leve–Moderada</span>
+        <span class="badge badge-impl">Escalón / Step</span>
+      </div>
+      <div class="top10-why">Primera línea en fascitis plantar y tendinopatía aquílea (protocolo Alfredson modificado). Alta eficacia clínica documentada. Fácil de enseñar y realizar en domicilio (escalera). Tratamiento conservador con mayor nivel de evidencia en patología de tobillo-pie en APS.</div>
+    </div>
+
+  </div>
+
+  <!-- MATRICES DE CLASIFICACIÓN -->
+  <div style="margin-top:32px; border-top: 1px solid var(--border); padding-top: 24px;">
+    <div style="font-size:14px; font-weight:700; margin-bottom:16px;">Matrices de clasificación complementaria</div>
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:16px;">
+
+      <div style="background:var(--green-light); border:1px solid var(--green-border); border-radius:var(--radius); padding:16px;">
+        <div style="font-size:12px; font-weight:700; color:var(--green); margin-bottom:10px; font-family:Arial;">🧓 MEJORES PARA ADULTO MAYOR</div>
+        <div style="font-size:11.5px; color:var(--text); font-family:Arial; line-height:2;">
+          1. Sit-to-stand en silla<br>
+          2. Puente gluteolumbar bipodal<br>
+          3. Bicicleta recumbente<br>
+          4. Balance unipodal con apoyo<br>
+          5. Chin tuck (sin implemento)<br>
+          6. Elongación de trapecio en silla<br>
+          7. RE glenohumeral en decúbito
+        </div>
+        <div style="font-size:10.5px; color:var(--green); margin-top:8px; font-family:Arial;">Criterio: baja demanda coordinativa, sin riesgo de caída, alta tolerancia</div>
+      </div>
+
+      <div style="background:var(--accent-light); border:1px solid var(--accent-border); border-radius:var(--radius); padding:16px;">
+        <div style="font-size:12px; font-weight:700; color:var(--accent); margin-bottom:10px; font-family:Arial;">👁️ MEJORES PARA ATENCIÓN SIMULTÁNEA</div>
+        <div style="font-size:11.5px; color:var(--text); font-family:Arial; line-height:2;">
+          1. Bicicleta estática/recumbente<br>
+          2. Abducción en decúbito lateral<br>
+          3. Theraband (inversión/eversión)<br>
+          4. Rolling plantar / foam roller<br>
+          5. Retracción escapular isométrica<br>
+          6. Elongaciones estáticas en silla<br>
+          7. SLR en colchoneta
+        </div>
+        <div style="font-size:10.5px; color:var(--accent); margin-top:8px; font-family:Arial;">Criterio: paciente trabaja solo, error visible desde lejos, bajo riesgo</div>
+      </div>
+
+      <div style="background:var(--purple-light); border:1px solid var(--purple-border); border-radius:var(--radius); padding:16px;">
+        <div style="font-size:12px; font-weight:700; color:var(--purple); margin-bottom:10px; font-family:Arial;">♻️ MAYOR REUTILIZACIÓN ENTRE PATOLOGÍAS</div>
+        <div style="font-size:11.5px; color:var(--text); font-family:Arial; line-height:2;">
+          1. Abducción de cadera (GM) → lumbar, cadera, rodilla, tobillo<br>
+          2. Puente gluteolumbar → lumbar, cadera, rodilla<br>
+          3. Retracción escapular → hombro, cervical, postura<br>
+          4. Sit-to-stand → rodilla, cadera, funcional<br>
+          5. Balance unipodal → tobillo, cadera, prevención caída
+        </div>
+        <div style="font-size:10.5px; color:var(--purple); margin-top:8px; font-family:Arial;">Criterio: útil en ≥3 patologías o regiones diferentes</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- NOTA DE EVIDENCIA FINAL -->
+  <div style="margin-top:24px; background:var(--amber-light); border:1px solid var(--amber-border); border-radius:var(--radius-sm); padding:14px 16px; font-size:11.5px; font-family:Arial; color:var(--amber); line-height:1.7;">
+    <strong style="color:var(--text);">Referencias de evidencia utilizadas:</strong><br>
+    (1) Lim et al. 2024, J Pers Med — RT en OA: SMD dolor −0.48, función −0.56 (n=1712) · (2) Liu et al. 2025, Front Public Health — Dosis óptima RT en OA: 680 METs-min/sem · (3) JOSPT 2024 — Ejercicio específico vs inespecífico en manguito rotador (n=1281 RCTs) · (4) Frontiers Bioeng 2025 — Estabilización escapular y movilización: evidencia moderada en dolor de hombro · (5) PMC10687566 2023 — Core/estabilización lumbar: SMD −1.13 en lumbalgia crónica · (6) Sit et al. 2021, BJGP — Ejercicio neuromuscular supervisado en dolor MSQ crónico en APS · (7) Pinto et al. 2016, PubMed — RT como prevención y tratamiento en trastornos MSQ del AM
+  </div>
+</div>
+
+</div><!-- end main -->
+
+<script>
+function showRegion(id) {
+  document.querySelectorAll('.region-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('sec-' + id).classList.add('active');
+  event.currentTarget.classList.add('active');
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+</script>
+</body>
+</html>
